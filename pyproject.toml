@@ -1,0 +1,26 @@
+[project]
+name = "web-clipper"
+version = "0.1.0"
+description = "CLI tool to clip web content from browsers to organized markdown files"
+readme = "README.md"
+authors = [
+    { name = "Harry Eslick", email = "32809214+harryeslick@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "pyperclip>=1.11.0",
+    "rich>=14.2.0",
+    "typer>=0.20.0",
+]
+
+[project.scripts]
+web-clipper = "web_clipper.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.9.9,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.1",
+]

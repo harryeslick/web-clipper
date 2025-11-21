@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Optional
 from urllib.parse import urlparse
 
-from .config import ClipperConfig
+from web_clipper.config import ClipperConfig
 
 
 def _sanitize_filename(name: str) -> str:
@@ -54,7 +54,7 @@ def _get_file_path(url: str, config: ClipperConfig) -> Path:
         file_path.parent.mkdir(parents=True, exist_ok=True)
     else:
         # Flat structure with domain prefix
-        filename_with_domain = f"{domain}_{filename}"
+        filename_with_domain = f"{domain}___{filename}"
         file_path = config.clips_directory / filename_with_domain
 
     return file_path
@@ -84,6 +84,8 @@ def _format_clip(
 
     if config.include_timestamp:
         timestamp = datetime.now().strftime(config.timestamp_format)
+        date = datetime.now().strftime(config.date_format)
+        lines.append(f"- **Date**: {date}")
         lines.append(f"- **Captured**: {timestamp}")
 
     if tags:
@@ -98,10 +100,10 @@ def _format_clip(
     # Content
     lines.append(content.strip())
 
-    # Separator
-    lines.append("")
-    lines.append("---")
-    lines.append("")
+    # # Separator
+    # lines.append("")
+    # lines.append("---")
+    # lines.append("")
 
     return "\n".join(lines)
 

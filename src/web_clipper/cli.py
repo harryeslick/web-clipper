@@ -6,9 +6,9 @@ import typer
 from rich.console import Console
 from rich.panel import Panel
 
-from . import __version__
-from .clipper import NoClipboardContentError, clip
-from .config import get_config
+from web_clipper import __version__
+from web_clipper.clipper import NoClipboardContentError, clip
+from web_clipper.config import get_config
 
 app = typer.Typer(
     name="web-clipper",

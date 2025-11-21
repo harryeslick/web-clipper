@@ -6,9 +6,9 @@ from typing import Optional
 
 import pyperclip
 
-from .browser import BrowserContext, BrowserError, get_browser_context
-from .config import ClipperConfig, get_config
-from .storage import save_clip
+from web_clipper.browser import BrowserContext, BrowserError, get_browser_context
+from web_clipper.config import ClipperConfig, get_config
+from web_clipper.storage import save_clip
 
 
 class ClipperError(Exception):
@@ -66,6 +66,7 @@ def clip(tags: Optional[str] = None, config: Optional[ClipperConfig] = None) -> 
         )
 
     # Step 2: Get browser context
+    # TODO Browser context only get chrome, not safari.
     try:
         browser_context = get_browser_context()
     except BrowserError:

@@ -3,7 +3,6 @@
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 
 
 @dataclass
@@ -11,20 +10,22 @@ class ClipperConfig:
     """Configuration for the web clipper."""
 
     clips_directory: Path
-    create_subdirs: bool = True
+    create_subdirs: bool = False
     include_title: bool = True
     include_timestamp: bool = True
     timestamp_format: str = "%Y-%m-%d %H:%M:%S"
+    date_format: str = "%Y-%m-%d"
 
     @classmethod
     def default(cls) -> "ClipperConfig":
         """Create default configuration."""
         return cls(
             clips_directory=Path.home() / "clips",
-            create_subdirs=True,
+            create_subdirs=False,
             include_title=True,
             include_timestamp=True,
-            timestamp_format="%Y-%m-%d %H:%M:%S"
+            timestamp_format="%Y-%m-%d %H:%M:%S",
+            date_format="%Y-%m-%d",
         )
 
     @classmethod

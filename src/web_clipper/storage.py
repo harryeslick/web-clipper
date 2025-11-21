@@ -85,7 +85,7 @@ def _format_clip(
     if config.include_timestamp:
         timestamp = datetime.now().strftime(config.timestamp_format)
         date = datetime.now().strftime(config.date_format)
-        lines.append(f"- **Date**: {date}")
+        lines.append(f"- **Date**: [[{date}]]")
         lines.append(f"- **Captured**: {timestamp}")
 
     if tags:

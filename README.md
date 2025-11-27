@@ -51,8 +51,14 @@ def default(cls) -> "ClipperConfig":
         timestamp_format="%Y-%m-%d %H:%M:%S"
     )
 ```
+To save clips to a custom directory . set ENV variable in: `~/.config/web-clipper/.env`
 
-Setting the `WEB_CLIPPER_DIR` environment variable before running a command changes `clips_directory`. The directory is created automatically and structured by domain (unless `create_subdirs=False`).
+eg:
+```env
+ WEB_CLIPPER_DIR=/Users/name/my/path/clips
+```
+
+The directory is created automatically and structured by domain (unless `create_subdirs=False`).
 
 ### Markdown output
 Every clip is appended to a Markdown file such as `~/clips/github.com/issues.md` and looks like:

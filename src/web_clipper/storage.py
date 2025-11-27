@@ -73,26 +73,27 @@ def _format_clip(
     Returns:
         Formatted markdown string for the clip
     """
-    lines = ["---"]
+    lines = []
 
     # Title
     clip_title = title or "Untitled"
-    lines.append(f"## Clip: {clip_title}")
+    lines.append(f"## {clip_title}")
 
     # Metadata
-    lines.append(f"- **URL**: {url}")
+    lines.append(f"  **URL**: [{clip_title}]({url})")
 
     if config.include_timestamp:
-        timestamp = datetime.now().strftime(config.timestamp_format)
         date = datetime.now().strftime(config.date_format)
-        lines.append(f"- **Date**: [[{date}]]")
-        lines.append(f"- **Captured**: {timestamp}")
+        lines.append(f"  **Date**: [[{date}]]")
+
+        timestamp = datetime.now().strftime(config.timestamp_format)
+        lines.append(f"  **time**: {timestamp}")
 
     if tags:
         # Format tags with hashtags
         tag_list = [f"#{tag.strip()}" for tag in tags.split(",") if tag.strip()]
         if tag_list:
-            lines.append(f"- **Tags**: {' '.join(tag_list)}")
+            lines.append(f"  - **Tags**: {' '.join(tag_list)}")
 
     # Empty line before content
     lines.append("")
@@ -102,8 +103,8 @@ def _format_clip(
 
     # # Separator
     # lines.append("")
-    # lines.append("---")
-    # lines.append("")
+    lines.append("---")
+    lines.append("")
 
     return "\n".join(lines)
 

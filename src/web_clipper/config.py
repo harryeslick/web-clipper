@@ -4,6 +4,14 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+# Load .env file from config directory
+_config_dir = Path.home() / ".config" / "web-clipper"
+_env_file = _config_dir / ".env"
+if _env_file.exists():
+    load_dotenv(_env_file)
+
 
 @dataclass
 class ClipperConfig:
@@ -24,7 +32,7 @@ class ClipperConfig:
             create_subdirs=False,
             include_title=True,
             include_timestamp=True,
-            timestamp_format="%Y-%m-%d %H:%M:%S",
+            timestamp_format="%H:%M:%S",
             date_format="%Y-%m-%d",
         )
 

@@ -5,11 +5,18 @@ CLI helper that turns the text you copy from Chrome or Safari into organized Mar
 designed to work with MacOS only.
 
 ## Features
-- Captures the current clipboard, browser URL, and tab title via AppleScript on macOS.
-- Organizes clips inside domain-based folders and appends structured Markdown entries.
-- Adds optional metadata such as timestamps, tags, and page titles to every capture.
-- Simple Typer-powered CLI with `clip`, `init`, and `config` commands plus Rich output.
-- Optional Raycast integration (`raycast/clip-to-markdown.sh`) for a global launcher shortcut.
+- **Smart Format Detection**: Automatically detects clipboard content type
+  - HTML from web pages → Converts to clean Markdown with formatting preserved
+  - Plain text → Saves as-is
+  - Direct image copies → Saves PNG with Markdown link
+- **Image Handling**:
+  - Downloads images from web page HTML automatically
+  - Saves images to `clips/images/` with timestamp-based naming
+  - Updates image references to local paths in Markdown
+- **Browser Integration**: Captures current URL and tab title via AppleScript (Chrome/Safari)
+- **Organized Storage**: Domain-based folder structure with structured Markdown entries
+- **Rich Metadata**: Timestamps, tags, page titles, and source URLs for every clip
+- **CLI & Raycast**: Simple Typer-powered CLI + optional Raycast integration for global shortcuts
 
 ## Requirements
 - macOS (AppleScript is used to read browser context from Chrome/Safari).
@@ -61,19 +68,36 @@ eg:
 The directory is created automatically and structured by domain (unless `create_subdirs=False`).
 
 ### Markdown output
-Every clip is appended to a Markdown file such as `~/clips/github.com/issues.md` and looks like:
+Every clip is appended to a Markdown file such as `~/clips/github.com___issues.md` and looks like:
 
-```
+```markdown
+## Issue Title
+  **URL**: [Issue Title](https://github.com/org/repo/issues/123)
+  **Date**: [[2025-01-15]]
+  **time**: 11:45:02
+  - **Tags**: #reading #todo
+
+<clipped content with preserved formatting>
+
+**Bold text**, *italic text*, and [links](https://example.com) are preserved.
+
+![screenshot](./images/image_1234567890_0.png)
+
 ---
-## Clip: Issue Title
-- **URL**: https://github.com/org/repo/issues/123
-- **Captured**: 2025-01-15 11:45:02
-- **Tags**: #reading #todo
-
-<clipped text>
-
----
 ```
+
+### Image Storage
+Images are stored in `clips/images/` with the following structure:
+```
+clips/
+├── images/
+│   ├── image_1234567890_0.png
+│   ├── image_1234567890_1.jpeg
+│   └── image_1234567891_0.png
+└── example.com___article.md
+```
+
+Images are referenced in Markdown with relative paths: `![alt](./images/image_xxx.ext)`
 
 ## Raycast Integration
 1. Make sure the script is executable: `chmod +x raycast/clip-to-markdown.sh`.
@@ -88,6 +112,30 @@ The Raycast script simply runs `uv run web-clipper clip --tags "$1"`, so it shar
 - Run the unit test suite: `uv run pytest`
 - Format any Markdown clips however you like—`storage.py` appends to UTF-8 files, so existing notes stay intact.
 
+## How It Works
+
+### Clipboard Detection Flow
+1. **Check for HTML** (from web page copies using PyObjC)
+   - If found: Convert HTML to Markdown using `markdownify`
+   - Download all embedded images via `requests`
+   - Update image URLs to local file paths
+2. **Check for Plain Text** (if no HTML)
+   - Extract text via `pyperclip`
+   - Handle UTF-8 encoding errors gracefully
+3. **Check for Direct Images** (if copying an image file)
+   - Save PNG via AppleScript/`pngpaste`
+   - Generate Markdown image link
+
+### Dependencies
+- `pyperclip`: Clipboard text access
+- `pyobjc-framework-cocoa`: Native macOS clipboard HTML access
+- `markdownify`: HTML to Markdown conversion
+- `beautifulsoup4`: HTML parsing for image extraction
+- `requests`: HTTP image downloading
+- `typer` + `rich`: CLI interface
+
 ## Troubleshooting
-- If Chrome/Safari is closed, the tool falls back to a generic `unknown` URL and file. Make sure one of the browsers is active if you want structured folders.
-- Clipboard access errors are usually caused by permission issues—on macOS grant Terminal/Raycast “Accessibility” and “Automation” permissions if prompted.
+- **No browser context**: If Chrome/Safari is closed, tool falls back to `unknown` URL. Keep browser active for structured folders.
+- **Clipboard permissions**: Grant Terminal/Raycast "Accessibility" and "Automation" permissions in System Settings.
+- **Image download failures**: Check internet connection. Images that fail to download are skipped (warning logged).
+- **UTF-8 errors**: Tool now handles non-UTF-8 clipboard content with automatic fallback and error replacement.

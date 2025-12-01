@@ -16,3 +16,4 @@ set -euo pipefail
 
 cd "$HOME/Developer/web-clipper" || exit 1
 uv run web-clipper clip --tags "$1"
+

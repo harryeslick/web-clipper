@@ -8,8 +8,11 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "markdownify>=1.2.2",
+    "pyobjc-framework-cocoa>=12.1",
     "pyperclip>=1.11.0",
     "python-dotenv>=1.2.1",
+    "requests>=2.32.5",
     "rich>=14.2.0",
     "typer>=0.20.0",
 ]
